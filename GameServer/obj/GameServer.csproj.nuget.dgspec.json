@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Alejandro\\Desktop\\OpenTerra\\Assets\\Scripts\\GameServer\\GameServer\\GameServer.csproj": {}
+    "C:\\Users\\Alejandro\\Desktop\\GameServer\\GameServer\\GameServer.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Alejandro\\Desktop\\OpenTerra\\Assets\\Scripts\\GameServer\\GameServer\\GameServer.csproj": {
+    "C:\\Users\\Alejandro\\Desktop\\GameServer\\GameServer\\GameServer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Alejandro\\Desktop\\OpenTerra\\Assets\\Scripts\\GameServer\\GameServer\\GameServer.csproj",
+        "projectUniqueName": "C:\\Users\\Alejandro\\Desktop\\GameServer\\GameServer\\GameServer.csproj",
         "projectName": "GameServer",
-        "projectPath": "C:\\Users\\Alejandro\\Desktop\\OpenTerra\\Assets\\Scripts\\GameServer\\GameServer\\GameServer.csproj",
+        "projectPath": "C:\\Users\\Alejandro\\Desktop\\GameServer\\GameServer\\GameServer.csproj",
         "packagesPath": "C:\\Users\\Alejandro\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Alejandro\\Desktop\\OpenTerra\\Assets\\Scripts\\GameServer\\GameServer\\obj\\",
+        "outputPath": "C:\\Users\\Alejandro\\Desktop\\GameServer\\GameServer\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

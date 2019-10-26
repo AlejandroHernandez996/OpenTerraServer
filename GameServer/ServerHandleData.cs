@@ -12,23 +12,28 @@ namespace GameServer
         public static void InitializePackets()
         {
             packets.Add((int)ClientPackets.CHelloServer, DataReceiver.HandleHelloServer);
+            packets.Add((int)ClientPackets.CNameDeckServer, DataReceiver.HandleNameAndDeck);
         }
         public static void HandleData(int connectionID, byte[] data)
         {
-            if (data.Length == 0)
-                return;
-
             byte[] buffer = (byte[])data.Clone();
             int packetLength = 0;
-            ByteBuffer clientBuffer = ClientManager.clients[connectionID].buffer;
 
-            if(clientBuffer == null)
+            if(ClientManager.clients[connectionID].buffer == null)
             {
-                clientBuffer = new ByteBuffer();
+                ClientManager.clients[connectionID].buffer = new ByteBuffer();
             }
 
-            clientBuffer.WriteBytes(buffer);
+            ByteBuffer clientBuffer = ClientManager.clients[connectionID].buffer;
 
+            clientBuffer.WriteBytes(buffer);
+            if(clientBuffer.GetBufferSize() == 0)
+            {
+
+                clientBuffer.ClearBuffer();
+                return;
+
+            }
             if(clientBuffer.GetBufferSize() >= 4)
             {
                 packetLength = clientBuffer.ReadInt(false);
@@ -49,7 +54,7 @@ namespace GameServer
                 }
 
                 packetLength = 0;
-                if(clientBuffer.GetBufferSize() >= 4)
+                if(clientBuffer.GetRemainingBufferLength() >= 4)
                 {
                     packetLength = clientBuffer.ReadInt(false);
                     if (packetLength <= 0)
@@ -66,7 +71,7 @@ namespace GameServer
             buffer.WriteBytes(data);
             int packetID = buffer.ReadInt();
             buffer.Dispose();
-            if(packets.TryGetValue(connectionID, out Packet packet))
+            if(packets.TryGetValue(packetID, out Packet packet))
             {
                 packet.Invoke(connectionID, data);
             }

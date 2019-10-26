@@ -6,7 +6,7 @@ namespace GameServer
 {   
     public enum ServerPackets
     {
-        SWelcomeMessage = 1,
+        SWelcomeMessage = 1, SMatchMade = 2
     }
     static class DataSender
     {
@@ -15,8 +15,19 @@ namespace GameServer
             ByteBuffer buffer = new ByteBuffer();
             buffer.WriteInt((int)ServerPackets.SWelcomeMessage);
             buffer.WriteString("Welcome to the server");
+            Console.WriteLine("Sending Welcome msg..." + buffer.GetBufferSize() + " bytes");
             ClientManager.sendDataTo(connectionID, buffer.ToArray());
             buffer.Dispose();
         }
+
+        public static void SendMatchMade(int connectionID, int player2ID)
+        {
+            ByteBuffer buffer = new ByteBuffer();
+            buffer.WriteInt((int)ServerPackets.SMatchMade);
+            buffer.WriteString(ClientManager.clients[player2ID].name);
+            ClientManager.sendDataTo(connectionID, buffer.ToArray());
+            buffer.Dispose();
+        }
+        
     }
 }

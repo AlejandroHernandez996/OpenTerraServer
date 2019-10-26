@@ -6,7 +6,7 @@ namespace GameServer
 {
     public enum ClientPackets
     {
-        CHelloServer = 1, CNameDeckServer = 2,
+        CHelloServer = 1, CNameDeckServer = 2
     }
     class DataReceiver
     {

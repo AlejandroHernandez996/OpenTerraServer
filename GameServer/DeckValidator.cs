@@ -10,6 +10,8 @@ namespace GameServer
 
         public static bool Validate(string deckCode)
         {
+            if (deckCode.Equals("dev"))
+                return true;
             bool result = deckCode.Length == 82 
                 && FactionCheck(deckCode.Substring(0,1), deckCode.Substring(1,1))
                 && CardsCheck(deckCode.Substring(2,deckCode.Length-2));
@@ -67,7 +69,7 @@ namespace GameServer
                 if (cardMap[temp] > 3)
                 {
                     Console.WriteLine("Card {0} is used more than 3 times", temp);
-                    return false;
+                    //return false;
                 }
             }
 

@@ -6,7 +6,7 @@ namespace GameServer
 {   
     public enum ServerPackets
     {
-        SWelcomeMessage = 1, SMatchMade = 2
+        SWelcomeMessage = 1, SMatchMade = 2, SStartGame = 3
     }
     static class DataSender
     {
@@ -28,6 +28,20 @@ namespace GameServer
             ClientManager.sendDataTo(connectionID, buffer.ToArray());
             buffer.Dispose();
         }
-        
+
+        public static void SendStartGame(int connectionID, List<Card> hand)
+        {
+            ByteBuffer buffer = new ByteBuffer();
+            buffer.WriteInt((int)ServerPackets.SStartGame);
+            buffer.WriteInt(hand.Count);
+            foreach(Card card in hand)
+            {
+                buffer.WriteString(card.id);
+            }
+
+            ClientManager.sendDataTo(connectionID, buffer.ToArray());
+            buffer.Dispose();
+        }
+
     }
 }

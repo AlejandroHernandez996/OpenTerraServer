@@ -8,6 +8,7 @@ namespace GameServer
         {
 
             Engine.InitializeServer();
+            CardDictionary.InitCardMap();
             Console.ReadLine();
         }
     }

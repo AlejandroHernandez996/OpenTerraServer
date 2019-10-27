@@ -6,7 +6,7 @@ namespace GameServer
 {
     public enum ClientPackets
     {
-        CHelloServer = 1, CNameDeckServer = 2
+        CHelloServer = 1, CNameDeckServer = 2, CMulligan = 3
     }
     class DataReceiver
     {
@@ -49,6 +49,24 @@ namespace GameServer
             }
 
             buffer.Dispose();
+        }
+
+        public static void HandleMulligan(int connectionID, byte[] data)
+        {
+            Console.WriteLine("Player mulligan received");
+            ByteBuffer buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            buffer.ReadInt();
+
+            int mulliganSize = buffer.ReadInt();
+            List<Card> cardsMulliganed = new List<Card>();
+
+            for(int x = 0; x < mulliganSize; x++)
+            {
+                cardsMulliganed.Add(CardDictionary.cardMap[buffer.ReadString()]);
+            }
+
+            GameEngineManager.gameEngines[ClientManager.clients[connectionID].gameEngineID].Mulligan(connectionID, cardsMulliganed);
         }
 
     }

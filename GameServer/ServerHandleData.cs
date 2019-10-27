@@ -13,6 +13,8 @@ namespace GameServer
         {
             packets.Add((int)ClientPackets.CHelloServer, DataReceiver.HandleHelloServer);
             packets.Add((int)ClientPackets.CNameDeckServer, DataReceiver.HandleNameAndDeck);
+            packets.Add((int)ClientPackets.CMulligan, DataReceiver.HandleMulligan);
+
         }
         public static void HandleData(int connectionID, byte[] data)
         {

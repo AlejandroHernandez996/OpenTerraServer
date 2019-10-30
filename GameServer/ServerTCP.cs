@@ -22,7 +22,6 @@ namespace GameServer
             TcpClient client = serverSocket.EndAcceptTcpClient(ar);
             serverSocket.BeginAcceptTcpClient(new AsyncCallback(OnClientConnect), null);
             ClientManager.CreateNewConnection(client);
-            DataSender.SendConnect();
         }
     }
 }

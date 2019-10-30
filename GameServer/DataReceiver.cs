@@ -13,7 +13,7 @@ namespace GameServer
     {
         public static void HandleConnect(int connectionID, byte[] data)
         {
-            DataSender.SendConnect(int connectionID);
+            DataSender.SendConnect(connectionID);
         }
 
         public static void HandleNameAndDeck(int connectionID, byte[] data)

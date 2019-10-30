@@ -11,7 +11,7 @@ namespace GameServer
 
         public static void InitializePackets()
         {
-            packets.Add((int)ClientPackets.CHelloServer, DataReceiver.HandleHelloServer);
+            packets.Add((int)ClientPackets.CConnect, DataReceiver.HandleConnect);
             packets.Add((int)ClientPackets.CNameDeckServer, DataReceiver.HandleNameAndDeck);
             packets.Add((int)ClientPackets.CMulligan, DataReceiver.HandleMulligan);
             packets.Add((int)ClientPackets.CHandToBench, DataReceiver.HandleHandToBench );

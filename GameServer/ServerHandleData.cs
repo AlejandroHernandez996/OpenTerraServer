@@ -14,6 +14,12 @@ namespace GameServer
             packets.Add((int)ClientPackets.CHelloServer, DataReceiver.HandleHelloServer);
             packets.Add((int)ClientPackets.CNameDeckServer, DataReceiver.HandleNameAndDeck);
             packets.Add((int)ClientPackets.CMulligan, DataReceiver.HandleMulligan);
+            packets.Add((int)ClientPackets.CHandToBench, DataReceiver.HandleHandToBench );
+            packets.Add((int)ClientPackets.CPass, DataReceiver.HandlePass);
+            packets.Add((int)ClientPackets.CBenchToAttack, DataReceiver.HandleBenchToAttack);
+            packets.Add((int)ClientPackets.CAttack, DataReceiver.HandleAttack);
+            packets.Add((int)ClientPackets.CDefend, DataReceiver.HandleDefend);
+            packets.Add((int)ClientPackets.CBattle, DataReceiver.HandleBattle);
 
         }
         public static void HandleData(int connectionID, byte[] data)

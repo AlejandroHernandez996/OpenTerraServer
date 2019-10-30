@@ -20,7 +20,6 @@ namespace GameServer
             client.Start();
             clients.Add(client.connectionID, client);
 
-            DataSender.SendWelcomeMessage(client.connectionID);
         }
 
         public static void sendDataTo(int connectionId, byte[] data)

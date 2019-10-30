@@ -6,21 +6,14 @@ namespace GameServer
 {
     public enum ClientPackets
     {
-        CHelloServer = 1, CNameDeckServer = 2, CMulligan = 3, CHandToBench = 4, CPass = 5, CBenchToAttack = 6, CAttack = 7, CDefend = 8,
+        CConnect = 1, CNameDeckServer = 2, CMulligan = 3, CHandToBench = 4, CPass = 5, CBenchToAttack = 6, CAttack = 7, CDefend = 8,
         CBattle = 9,
     }
     class DataReceiver
     {
-        public static void HandleHelloServer(int connectionID, byte[] data)
+        public static void HandleConnect(int connectionID, byte[] data)
         {
-            ByteBuffer buffer = new ByteBuffer();
-            buffer.WriteBytes(data);
-            int packetID = buffer.ReadInt();
-            string msg = buffer.ReadString();
-
-            Console.WriteLine(msg);
-
-            buffer.Dispose();
+            DataSender.SendConnect(int connectionID);
         }
 
         public static void HandleNameAndDeck(int connectionID, byte[] data)

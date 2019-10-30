@@ -6,7 +6,7 @@ namespace GameServer
 {   
     public enum ServerPackets
     {
-        SMatchMade = 2, SMulligan = 4, SUpdatedStats = 5, SUpdatedBoard = 7
+        SConnect = 1, SMatchMade = 2, SMulligan = 4, SUpdatedStats = 5, SUpdatedBoard = 7
     }
     static class DataSender
     {
@@ -16,6 +16,14 @@ namespace GameServer
             ByteBuffer buffer = new ByteBuffer();
             buffer.WriteInt((int)ServerPackets.SMatchMade);
             buffer.WriteString(ClientManager.clients[player2ID].name);
+            ClientManager.sendDataTo(connectionID, buffer.ToArray());
+            buffer.Dispose();
+        }
+
+        public static void SendConnect(int connectionID)
+        {
+            ByteBuffer buffer = new ByteBuffer();
+            buffer.WriteInt((int)ServerPackets.SConnect);
             ClientManager.sendDataTo(connectionID, buffer.ToArray());
             buffer.Dispose();
         }

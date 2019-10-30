@@ -8,7 +8,7 @@ namespace GameServer
 {
     static class ServerTCP
     {
-        static TcpListener serverSocket = new TcpListener(IPAddress.Any, 6969);
+        static TcpListener serverSocket = new TcpListener(IPAddress.Any, 443);
 
         public static  void InitNetwork()
         {

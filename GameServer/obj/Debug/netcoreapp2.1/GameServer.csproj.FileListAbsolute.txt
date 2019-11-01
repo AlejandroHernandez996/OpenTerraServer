@@ -14,9 +14,9 @@ C:\Users\Alejandro\Desktop\GameServer\GameServer\bin\Debug\netcoreapp2.1\GameSer
 C:\Users\Alejandro\Desktop\GameServer\GameServer\bin\Debug\netcoreapp2.1\GameServer.runtimeconfig.dev.json
 C:\Users\Alejandro\Desktop\GameServer\GameServer\bin\Debug\netcoreapp2.1\GameServer.dll
 C:\Users\Alejandro\Desktop\GameServer\GameServer\bin\Debug\netcoreapp2.1\GameServer.pdb
+C:\Users\Alejandro\Desktop\GameServer\GameServer\obj\Debug\netcoreapp2.1\GameServer.csprojAssemblyReference.cache
 C:\Users\Alejandro\Desktop\GameServer\GameServer\obj\Debug\netcoreapp2.1\GameServer.csproj.CoreCompileInputs.cache
 C:\Users\Alejandro\Desktop\GameServer\GameServer\obj\Debug\netcoreapp2.1\GameServer.AssemblyInfoInputs.cache
 C:\Users\Alejandro\Desktop\GameServer\GameServer\obj\Debug\netcoreapp2.1\GameServer.AssemblyInfo.cs
 C:\Users\Alejandro\Desktop\GameServer\GameServer\obj\Debug\netcoreapp2.1\GameServer.dll
 C:\Users\Alejandro\Desktop\GameServer\GameServer\obj\Debug\netcoreapp2.1\GameServer.pdb
-C:\Users\Alejandro\Desktop\GameServer\GameServer\obj\Debug\netcoreapp2.1\GameServer.csprojAssemblyReference.cache

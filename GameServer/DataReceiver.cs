@@ -7,7 +7,7 @@ namespace GameServer
     public enum ClientPackets
     {
         CNameDeckServer = 2, CMulligan = 3, CHandToBench = 4, CPass = 5, CBenchToAttack = 6, CAttack = 7, CDefend = 8,
-        CBattle = 9,
+        CBattle = 9, CChallenge = 10
     }
     class DataReceiver
     {
@@ -36,6 +36,18 @@ namespace GameServer
                 ClientManager.clients[connectionID].socket.Close();
 
             }
+
+            buffer.Dispose();
+        }
+
+        public static void HandleChallenge(int connectionID, byte[] data)
+        {
+            Console.WriteLine("Challenge received");
+            ByteBuffer buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            buffer.ReadInt();
+
+            GameEngineManager.gameEngines[ClientManager.clients[connectionID].gameEngineID].Challenge(connectionID, buffer.ReadString(),buffer.ReadInt());
 
             buffer.Dispose();
         }

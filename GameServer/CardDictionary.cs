@@ -51,9 +51,24 @@ namespace GameServer
             cardMap["04"].toughness = 1;
             cardMap["0a"].toughness = 1;
             cardMap["0q"].toughness = 1;
+            cardMap["0f"].toughness = 1;
 
             cardMap["0d"].isBarrier = true;
             cardMap["0m"].isBarrier = true;
+
+            cardMap["01"].isChallenger = true;
+            cardMap["0b"].isChallenger = true;
+            cardMap["0g"].isChallenger = true;
+            cardMap["0l"].isChallenger = true;
+            cardMap["0y"].isChallenger = true;
+            cardMap["0v"].isChallenger = true;
+            cardMap["0s"].isChallenger = true;
+
+            cardMap["0p"].isQuickAttack = true;
+            cardMap["0u"].isQuickAttack = true;
+
+            cardMap["0f"].isElusive = true;
+
 
         }
 

@@ -13,8 +13,10 @@ namespace GameServer
         public string name;
         public string id;
 
-        public bool isChallenger = false;
         public bool isBarrier = false;
+        public bool isChallenger = false;
+        public bool isQuickAttack = false;
+        public bool isElusive = false;
         public int toughness = 0;
         public Card(string name, int attack, int health, string id, int mana)
         {
@@ -31,5 +33,7 @@ namespace GameServer
 
             return clone;
         }
+
+
     }
 }

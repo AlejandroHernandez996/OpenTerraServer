@@ -28,6 +28,7 @@ namespace GameServer
         public bool isMulliganDone = false;
         public bool endTurn = false;
         public bool canAttackerAttack = true;
+        public bool challengerAttack = false;
 
         public int attackPlayerId;
         public int turnPlayerId;
@@ -87,6 +88,26 @@ namespace GameServer
             }
             turnPlayerId = player1ID;
             attackPlayerId = player1ID;
+        }
+
+        public void Challenge(int playerID, string challengedCard, int index)
+        {
+            if (!playerIsAttacking[playerID] || playerID != turnPlayerId || !challengerAttack)
+            {
+                Console.WriteLine("Player attack is {0} and attacking player is {1} and challenger attack is {2}", playerIsAttacking[playerID], ClientManager.clients[turnPlayerId], challengerAttack);
+                return;
+            }
+            challengerAttack = false;
+            if (playerMapBench[playerToPlayer[playerID]][index].id.Equals(challengedCard))
+            {
+                playerMapAttackZone[playerToPlayer[playerID]][playerMapAttackZone[playerID].Count-1] = playerMapBench[playerToPlayer[playerID]][index];
+                playerMapBench[playerToPlayer[playerID]].RemoveAt(index);
+            }
+            else
+            {
+                Console.Write("Card at {0} is {1| not {3}", index, playerMapAttackZone[playerToPlayer[playerID]][index].id, challengedCard);
+            }
+            SendUpdatedBoardAndStats();
         }
 
         private void CreateDeck(string deck, int id)
@@ -152,16 +173,7 @@ namespace GameServer
                 Console.WriteLine("Player defend is {0} and turnPlayer is {1} ", playerIsDefending[player], ClientManager.clients[turnPlayerId].name);
                 return;
             }
-            if(playerMapAttackZone[player].Count == 0)
-            {
-                foreach(Card card in playerMapAttackZone[playerToPlayer[player]])
-                {
-                    playerMapHealth[player] -= card.attack;
-                    playerMapBench[playerToPlayer[player]].Add(card);
-                }
-            }
-            else
-            {
+           
                 int enemy = playerToPlayer[player];
                 for (int x = 0; x < playerMapAttackZone[enemy].Count; x++)
                 {
@@ -177,41 +189,25 @@ namespace GameServer
                             playerMapAttackZone[player][x].name, playerMapAttackZone[player][x].health, playerMapAttackZone[player][x].attack,
                             playerMapAttackZone[enemy][x].name, playerMapAttackZone[enemy][x].health, playerMapAttackZone[enemy][x].attack
                             );
-                        if (playerMapAttackZone[player][x].isBarrier)
-                        {
-                            playerMapAttackZone[player][x].isBarrier = false;
-                        }
-                        else
-                        {
-                            playerMapAttackZone[player][x].health -= playerMapAttackZone[enemy][x].attack - playerMapAttackZone[player][x].toughness;
-                        }
-
-                        if (playerMapAttackZone[enemy][x].isBarrier)
-                        {
-                            playerMapAttackZone[enemy][x].isBarrier = false;
-                        }
-                        else
-                        {
-                            playerMapAttackZone[enemy][x].health -= playerMapAttackZone[player][x].attack - playerMapAttackZone[enemy][x].toughness;
-                        }
+                    
+                    CalculateBattle(playerMapAttackZone[player][x], playerMapAttackZone[enemy][x], x);
 
                         Console.WriteLine("Card: {0} Stats: {1}, {2} vs Card: {3} Stats: {4}, {5}",
                             playerMapAttackZone[player][x].name, playerMapAttackZone[player][x].health, playerMapAttackZone[player][x].attack,
                             playerMapAttackZone[enemy][x].name, playerMapAttackZone[enemy][x].health, playerMapAttackZone[enemy][x].attack
                             );
 
-                        if (playerMapAttackZone[player][x].health > 0)
+                    foreach(int p in players)
+                    {
+                        if (playerMapAttackZone[p][x].health > 0)
                         {
-                            playerMapBench[player].Add(playerMapAttackZone[player][x]);
+                            playerMapBench[p].Add(playerMapAttackZone[p][x]);
                         }
-                        if (playerMapAttackZone[enemy][x].health > 0)
-                        {
-                            playerMapBench[enemy].Add(playerMapAttackZone[enemy][x]);
-                        }
+                    }
 
                     }
-                }
             }
+            
             
             playerMapAttackZone[player] = new List<Card>();
             playerMapAttackZone[playerToPlayer[player]] = new List<Card>();
@@ -223,12 +219,54 @@ namespace GameServer
             SendUpdatedBoardAndStats();
         }
 
+        private void CalculateBattle(Card player, Card enemy, int x)
+        {
+
+            if(player.isQuickAttack && !enemy.isQuickAttack)
+            {
+                damageCard(player.attack, enemy);
+                if(enemy.health <= 0)
+                {
+                    return;
+                }
+            }else if(!player.isQuickAttack && enemy.isQuickAttack)
+            {
+                damageCard(enemy.attack, player);
+                if (player.health <= 0)
+                {
+                    return;
+                }
+            }
+            else
+            {
+                damageCard(player.attack, enemy);
+                damageCard(enemy.attack, player);
+            }
+
+        }
+
+        private void damageCard(int damage, Card card)
+        {
+            if (card.isBarrier)
+            {
+                card.isBarrier = false;
+                return;
+            }
+            int damge = damage - card.toughness;
+            card.health -= damge;
+        }
+
         public void Defend(string card, int playerID, int index)
         {
             Console.WriteLine("DEFENDING");
             if(!playerIsDefending[playerID] || turnPlayerId != playerID)
             {
                 Console.WriteLine("Player defend is {0} and turnPlayer is {1} ", playerIsDefending[playerID], ClientManager.clients[turnPlayerId].name);
+                return;
+            }
+            if(playerMapAttackZone[playerToPlayer[playerID]][index].isElusive && !CardDictionary.cardMap[card].isElusive)
+            {
+                Console.Write("CANT DEFEND ELUSIVE");
                 return;
             }
             bool found = false;
@@ -300,6 +338,10 @@ namespace GameServer
             {
                 return;
             }
+
+            challengerAttack = temp.isChallenger;
+            Console.WriteLine("Challenger approaches {0}", challengerAttack);
+            
             playerIsAttacking[playerID] = true;
             playerIsDefending[playerToPlayer[playerID]] = true;
             playerMapAttackZone[playerID].Add(temp);
@@ -310,15 +352,16 @@ namespace GameServer
         }
         private void SendUpdatedBoardAndStats()
         {
-            foreach(int player in players)
-            {
-                DataSender.SendUpdatedBoard(player, playerMapHand[player], playerMapBench[player], playerMapAttackZone[player],
-                playerMapBench[playerToPlayer[player]], playerMapAttackZone[playerToPlayer[player]]);
-            }
             foreach (int player in players)
             {
                 DataSender.SendUpdatedStats(player, PackStats(player, playerToPlayer[player]));
             }
+            foreach (int player in players)
+            {
+                DataSender.SendUpdatedBoard(player, playerMapHand[player], playerMapBench[player], playerMapAttackZone[player],
+                playerMapBench[playerToPlayer[player]], playerMapAttackZone[playerToPlayer[player]]);
+            }
+            
         }
         private ByteBuffer PackStats(int player, int enemy)
         {
@@ -385,6 +428,7 @@ namespace GameServer
             {
                 DrawCards(1, player1ID);
                 DrawCards(1, player2ID);
+                attackPlayerId = player1ID;
                 SendUpdatedBoardAndStats();
             }
             isMulliganDone =  false ? true : true;

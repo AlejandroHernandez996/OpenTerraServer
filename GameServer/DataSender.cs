@@ -6,7 +6,7 @@ namespace GameServer
 {   
     public enum ServerPackets
     {
-        SConnect = 1, SMatchMade = 2, SMulligan = 4, SUpdatedStats = 5, SUpdatedBoard = 7
+        SConnect = 1, SMatchMade = 2, SMulligan = 4, SUpdatedStats = 5, SUpdatedBoard = 7, SEndGame = 8
     }
     static class DataSender
     {
@@ -86,6 +86,16 @@ namespace GameServer
                     buffer.WriteBool(card.isBarrier);
                 }
             }
+        }
+
+        public static void SendEndGame(int player, string msg)
+        {
+            Console.WriteLine("Sending End Game");
+            ByteBuffer buffer = new ByteBuffer();
+            buffer.WriteInt((int)ServerPackets.SEndGame);
+            buffer.WriteString(msg);
+            ClientManager.sendDataTo(player, buffer.ToArray());
+            buffer.Dispose();
         }
     }
 }

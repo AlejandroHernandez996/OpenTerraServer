@@ -47,15 +47,19 @@ namespace GameServer
             cardMap.Add("0x", new Card("Placeholder_0x", 6, 6, "0x", 6));
             cardMap.Add("0y", new Card("Placeholder_0y", 3, 1, "0y", 4));
 
+
+            //TOUGH
             cardMap["02"].toughness = 1;
             cardMap["04"].toughness = 1;
             cardMap["0a"].toughness = 1;
             cardMap["0q"].toughness = 1;
             cardMap["0f"].toughness = 1;
 
+            //BARRIER
             cardMap["0d"].isBarrier = true;
             cardMap["0m"].isBarrier = true;
 
+            //CHALLENGER
             cardMap["01"].isChallenger = true;
             cardMap["0b"].isChallenger = true;
             cardMap["0g"].isChallenger = true;
@@ -64,12 +68,16 @@ namespace GameServer
             cardMap["0v"].isChallenger = true;
             cardMap["0s"].isChallenger = true;
 
+            //QUICK ATTACK
             cardMap["0p"].isQuickAttack = true;
             cardMap["0u"].isQuickAttack = true;
 
+            //ELUSIVE
             cardMap["0f"].isElusive = true;
 
-
+            //BATTLECRIES
+            cardMap["03"].hasBattlecry = true;
+            cardMap["03"].battlecry = new Battlecry_03();
         }
 
     }

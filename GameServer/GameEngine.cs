@@ -29,7 +29,7 @@ namespace GameServer
         public bool endTurn = false;
         public bool canAttackerAttack = true;
         public bool challengerAttack = false;
-
+        public bool targetAlly = false;
         public int attackPlayerId;
         public int turnPlayerId;
         public int turn = -1;
@@ -126,7 +126,7 @@ namespace GameServer
         public void HandToBench(int playerID, string card)
         {
             endTurn = false;
-            if(turnPlayerId != playerID)
+            if(turnPlayerId != playerID || targetAlly)
             {
                 Console.WriteLine("Not {0}'s turn", playerID);
                 return;
@@ -153,18 +153,41 @@ namespace GameServer
             {
                 return;
             }
-            playerMapBench[playerID].Add(temp);
-            DataSender.SendUpdatedBoard(playerID, playerMapHand[playerID], playerMapBench[playerID], playerMapAttackZone[playerID],
-                playerMapBench[playerToPlayer[playerID]], playerMapAttackZone[playerToPlayer[playerID]]);
-            turnPlayerId = playerToPlayer[playerID];
-            DataSender.SendUpdatedBoard(turnPlayerId, playerMapHand[turnPlayerId], playerMapBench[turnPlayerId], playerMapAttackZone[turnPlayerId],
-                playerMapBench[playerToPlayer[turnPlayerId]], playerMapAttackZone[playerToPlayer[turnPlayerId]]);
 
-            phase = ClientManager.clients[turnPlayerId].name + "'s Turn";
-            DataSender.SendUpdatedStats(player1ID, PackStats(player1ID, player2ID));
-            DataSender.SendUpdatedStats(player2ID, PackStats(player2ID, player1ID));
+            playerMapBench[playerID].Add(temp);
+
+            if (temp.hasBattlecry & (int)temp.battlecry.type == (int)BattlecryType.targetAlly & playerMapBench[playerID].Count > 1)
+            {
+                InitBattlecry(temp,playerID);
+            }
+            else
+            {
+                turnPlayerId = playerToPlayer[playerID];
+                phase = ClientManager.clients[turnPlayerId].name + "'s Turn";
+            }
+
+            SendUpdatedBoardAndStats();
         }
 
+        public void InitBattlecry(Card card, int player)
+        {
+                Console.WriteLine("WAITING FOR TARGET");
+                phase = ClientManager.clients[turnPlayerId].name + "'s Choose Friendly Target In Bench";
+                targetAlly = true;
+        }
+
+        public void BattlecryTargetAlly(string card, int player, int index)
+        {
+            if(turnPlayerId == player & targetAlly & playerMapBench[player].Count > index)
+            {
+                Console.WriteLine("Setting target effect");
+                targetAlly = false;
+                playerMapBench[player][playerMapBench[player].Count - 1].battlecry.TargetAlly(playerMapBench[player][index]);
+                turnPlayerId = playerToPlayer[player];
+                phase = ClientManager.clients[turnPlayerId].name + "'s Turn";
+                SendUpdatedBoardAndStats();
+            }
+        }
         public void Battle(int player)
         {
             Console.WriteLine("SENT BATTLE {0}", ClientManager.clients[player].name);
@@ -207,8 +230,18 @@ namespace GameServer
 
                     }
             }
-            
-            
+
+            if (playerMapHealth[player1ID] <= 0)
+            {
+                DataSender.SendEndGame(player1ID, "Defeat");
+                DataSender.SendEndGame(player2ID, "Victory");
+
+            }
+            else if (playerMapHealth[player2ID] <= 0)
+            {
+                DataSender.SendEndGame(player2ID, "Defeat");
+                DataSender.SendEndGame(player1ID, "Victory");
+            }
             playerMapAttackZone[player] = new List<Card>();
             playerMapAttackZone[playerToPlayer[player]] = new List<Card>();
             playerIsAttacking[playerToPlayer[player]] = false;
@@ -217,6 +250,8 @@ namespace GameServer
             turnPlayerId = playerToPlayer[turnPlayerId];
             phase = ClientManager.clients[turnPlayerId].name + "'s Turn";
             SendUpdatedBoardAndStats();
+
+          
         }
 
         private void CalculateBattle(Card player, Card enemy, int x)

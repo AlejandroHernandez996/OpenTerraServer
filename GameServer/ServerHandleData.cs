@@ -20,6 +20,8 @@ namespace GameServer
             packets.Add((int)ClientPackets.CDefend, DataReceiver.HandleDefend);
             packets.Add((int)ClientPackets.CBattle, DataReceiver.HandleBattle);
             packets.Add((int)ClientPackets.CChallenge, DataReceiver.HandleChallenge);
+            packets.Add((int)ClientPackets.CBattlecryTarget, DataReceiver.HandleBattlecryTarget);
+
         }
         public static void HandleData(int connectionID, byte[] data)
         {

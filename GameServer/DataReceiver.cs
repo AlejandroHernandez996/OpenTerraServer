@@ -7,10 +7,21 @@ namespace GameServer
     public enum ClientPackets
     {
         CNameDeckServer = 2, CMulligan = 3, CHandToBench = 4, CPass = 5, CBenchToAttack = 6, CAttack = 7, CDefend = 8,
-        CBattle = 9, CChallenge = 10
+        CBattle = 9, CChallenge = 10, CBattlecryTarget = 11
     }
     class DataReceiver
     {
+        public static void HandleBattlecryTarget(int connectionID, byte[] data)
+        {
+            Console.WriteLine("BCry target received");
+            ByteBuffer buffer = new ByteBuffer();
+            buffer.WriteBytes(data);
+            buffer.ReadInt();
+
+            GameEngineManager.gameEngines[ClientManager.clients[connectionID].gameEngineID].BattlecryTargetAlly(buffer.ReadString(), connectionID, buffer.ReadInt());
+
+            buffer.Dispose();
+        }
         public static void HandleNameAndDeck(int connectionID, byte[] data)
         {
             ByteBuffer buffer = new ByteBuffer();
